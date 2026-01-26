@@ -125,6 +125,34 @@ export default function LoginPage() {
             </Button>
           </form>
 
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            type="button"
+            className="w-full gap-2"
+            onClick={() => {
+              window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/auth/microsoft`;
+            }}
+          >
+            <svg className="h-5 w-5" viewBox="0 0 23 23">
+              <path fill="#f35325" d="M1 1h10v10H1z" />
+              <path fill="#81bc06" d="M12 1h10v10H12z" />
+              <path fill="#05a6f0" d="M1 12h10v10H1z" />
+              <path fill="#ffba08" d="M12 12h10v10H12z" />
+            </svg>
+            Microsoft
+          </Button>
+
           <div className="mt-4 text-center">
             <Link
               href="/auth/forgot-password"

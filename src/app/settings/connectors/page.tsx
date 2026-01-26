@@ -338,12 +338,12 @@ export default function ConnectorsPage() {
                               <Badge variant={conn.is_active ? "default" : "secondary"} className="text-xs h-5 px-1.5">
                                 {conn.is_active ? "Active" : "Inactive"}
                               </Badge>
-                              <Badge variant="outline" className="text-xs h-5 px-1.5 font-normal">
+                              {/* <Badge variant="outline" className="text-xs h-5 px-1.5 font-normal">
                                 {conn.project_key}
                               </Badge>
-                              <span>Issue Type: {conn.issue_type}</span>
+                              <span>Issue Type: {conn.issue_type}</span> */}
+                              <p className="text-xs text-muted-foreground truncate max-w-[300px]">{conn.server_url}</p>
                             </div>
-                            <p className="text-xs text-muted-foreground truncate max-w-[300px]">{conn.server_url}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1">

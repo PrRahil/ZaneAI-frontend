@@ -399,7 +399,7 @@ export default function ChatPage() {
                       />
                     </div>
                     <span className="text-sm text-[hsl(var(--fg))]/60">
-                      AI is thinking...
+                      Myzane AI thinking...
                     </span>
                   </div>
                 </div>

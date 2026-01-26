@@ -73,9 +73,9 @@ export default function Navigation() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-muted/50">
                 <Avatar className="h-9 w-9">
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-accent/10 text-accent font-medium">
                     {user?.username
                       ? user.username.slice(0, 2).toUpperCase()
                       : "AA"}

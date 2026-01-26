@@ -18,7 +18,7 @@ import ImpactEdge from "./edges/ImpactEdge";
 import { QueryViewerModal } from "./QueryViewerModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GitBranch, RotateCcw } from "lucide-react";
+import { GitBranch, RotateCcw, Maximize2, Minimize2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LineagePayload, LineageEdge as ReactFlowEdgeType } from "@/types/lineage";
 import { Table, Column, ReactFlowEdge } from "@/types/lineage";
@@ -70,6 +70,17 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
   } | null>(null);
   const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
   const [selectedEdgeQueries, setSelectedEdgeQueries] = useState<any[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [isFullscreen]);
 
   useEffect(() => {
     if (!data) return;
@@ -113,7 +124,7 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
       style: e.style,
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: (e.style as any)?.stroke || "rgb(59 130 246)",
+        color: (e.style as any)?.stroke || "rgb(79 70 229)",
       },
       data: {
         index,
@@ -252,6 +263,22 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
                   </span>
                 </div>
               )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="gap-2"
+              >
+                {isFullscreen ? (
+                  <>
+                    <Minimize2 className="h-4 w-4" /> Exit Full Screen
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="h-4 w-4" /> Full Screen
+                  </>
+                )}
+              </Button>
               <Button variant="outline" size="sm" onClick={clearSelection}>
                 <RotateCcw className="h-3 w-3 mr-1" /> Clear
               </Button>
@@ -260,7 +287,25 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
         </CardHeader>
 
         <CardContent>
-          <div className="h-[400px] border rounded-lg overflow-hidden relative">
+          <div
+            className={`border rounded-lg overflow-hidden relative transition-all duration-300
+    ${isFullscreen
+                ? "fixed inset-0 z-[99999] bg-background w-screen h-screen rounded-none border-none"
+                : "h-[400px]"
+              }
+  `}
+          >
+            {isFullscreen && (
+              <div className="absolute top-4 right-4 z-50 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setIsFullscreen(false)}
+                >
+                  Exit Fullscreen
+                </Button>
+              </div>
+            )}
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -279,7 +324,7 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
                 pannable
                 className="bg-transparent border border-border"
                 nodeColor={(n: any) =>
-                  n.data?.isSource ? "#60a5fa" : "#94a3b8"
+                  n.data?.isSource ? "#4F46E5" : "#94a3b8"
                 }
                 nodeComponent={({ id }: any) => <div key={id} />}
               />
@@ -290,7 +335,7 @@ export function ReactFlowLineage({ data }: { data: LineagePayload }) {
 
           <div className="mt-4 flex flex-wrap gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-sky-600" />{" "}
+              <div className="w-4 h-4 rounded bg-accent" />{" "}
               <span className="text-xs text-muted-foreground">Source</span>
             </div>
             <div className="flex items-center gap-2">

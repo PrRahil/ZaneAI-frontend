@@ -45,9 +45,6 @@ export default function JiraSetup() {
     formState: { errors },
   } = useForm<JiraConnectionSchemaType>({
     resolver: zodResolver(jiraConnectionSchema),
-    defaultValues: {
-      issue_type: "Task",
-    },
   });
 
   const onSubmit = (values: JiraConnectionSchemaType) => {
@@ -169,35 +166,6 @@ export default function JiraSetup() {
                 <p className="text-xs text-muted-foreground mt-1">
                   Generate from Atlassian Account Settings
                 </p>
-              </div>
-            </div>
-
-            {/* Project Config */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="project_key">Project Key</Label>
-                <Input
-                  id="project_key"
-                  placeholder="PROJ"
-                  {...register("project_key")}
-                  className={errors.project_key ? "border-red-500" : ""}
-                />
-                {errors.project_key && (
-                  <p className="text-red-500 text-sm mt-1">{errors.project_key.message}</p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="issue_type">Issue Type</Label>
-                <Input
-                  id="issue_type"
-                  placeholder="Task"
-                  defaultValue="Task"
-                  {...register("issue_type")}
-                  className={errors.issue_type ? "border-red-500" : ""}
-                />
-                {errors.issue_type && (
-                  <p className="text-red-500 text-sm mt-1">{errors.issue_type.message}</p>
-                )}
               </div>
             </div>
 

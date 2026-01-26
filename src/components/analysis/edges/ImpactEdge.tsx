@@ -35,7 +35,7 @@ export default function ImpactEdge({
             style?.stroke === "#ef4444"
               ? "#ef4444" // Keep red if dropped
               : highlighted
-                ? "rgb(37 99 235)"
+                ? "rgb(79 70 229)"
                 : "rgb(209 213 219)",
           strokeWidth: highlighted ? 4 : 1.5,
           transition: "all 200ms ease-in-out",

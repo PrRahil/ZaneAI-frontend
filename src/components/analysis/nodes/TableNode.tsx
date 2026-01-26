@@ -46,18 +46,18 @@ export default memo(function TableNode({ data }: any) {
   };
 
   return (
-    <div className="bg-white border border-blue-200 rounded-lg shadow-sm w-[280px] font-sans">
+    <div className="bg-white border border-accent/30 rounded-lg shadow-sm w-[280px] font-sans">
       {/* Header */}
       <div className="p-3 bg-slate-50/50 border-b border-slate-100 flex items-center gap-3 rounded-t-lg">
         <div className="mt-1">
-          <Snowflake className="h-5 w-5 text-sky-500" />
+          <Snowflake className="h-5 w-5 text-accent" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-0.5">
             TABLE
           </div>
           <div
-            className="text-sm font-bold text-blue-700 truncate"
+            className="text-sm font-bold text-accent truncate"
             title={tableName}
           >
             {tableName}
@@ -76,13 +76,13 @@ export default memo(function TableNode({ data }: any) {
         className="px-3 py-2 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className="text-xs text-blue-500 font-medium">
+        <span className="text-xs text-accent font-medium">
           {columns.length} of {columns.length} columns
         </span>
         {expanded ? (
-          <ChevronUp className="h-4 w-4 text-blue-400" />
+          <ChevronUp className="h-4 w-4 text-accent/60" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-blue-400" />
+          <ChevronDown className="h-4 w-4 text-accent/60" />
         )}
       </div>
 
@@ -94,7 +94,7 @@ export default memo(function TableNode({ data }: any) {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search"
-              className="w-full pl-8 pr-8 py-1.5 text-xs border border-slate-200 rounded text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-blue-300 transition-colors"
+              className="w-full pl-8 pr-8 py-1.5 text-xs border border-slate-200 rounded text-slate-600 placeholder:text-slate-400 focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
@@ -111,12 +111,12 @@ export default memo(function TableNode({ data }: any) {
                   className={`
                     group flex items-center justify-between px-2 py-1.5 rounded cursor-pointer transition-all relative
                     ${isInLineagePath
-                      ? "bg-blue-500 text-white ring-2 ring-blue-600 ring-offset-1 shadow-md"
+                      ? "bg-accent text-accent-foreground ring-2 ring-accent ring-offset-1 shadow-md"
                       : col.isPrimary
                         ? "bg-red-50"
                         : col.isImpacted
                           ? "bg-amber-50"
-                          : "hover:bg-blue-50"
+                          : "hover:bg-accent/10"
                     }
                   `}
                 >
@@ -125,7 +125,7 @@ export default memo(function TableNode({ data }: any) {
                     position={Position.Left}
                     id={col.name}
                     style={{ left: -22 }}
-                    className="w-1.5 h-1.5 !bg-blue-500 !border-white !border"
+                    className="w-1.5 h-1.5 !bg-accent !border-white !border"
                   />
                   <div className="flex items-center gap-2.5 overflow-hidden">
                     <div className="shrink-0 w-4 flex justify-center">
@@ -140,7 +140,7 @@ export default memo(function TableNode({ data }: any) {
                         ? "text-white font-semibold"
                         : col.isPrimary
                           ? "text-red-700 font-medium"
-                          : "text-slate-600 group-hover:text-blue-700"
+                          : "text-slate-600 group-hover:text-accent"
                         }`}
                     >
                       {col.name}
@@ -165,7 +165,7 @@ export default memo(function TableNode({ data }: any) {
                     <AlignJustify
                       className={`h-3 w-3 rotate-90 transition-opacity ${isInLineagePath
                         ? "text-white opacity-100"
-                        : "text-blue-300 opacity-0 group-hover:opacity-100"
+                        : "text-accent/50 opacity-0 group-hover:opacity-100"
                         }`}
                     />
                   </div>
@@ -175,7 +175,7 @@ export default memo(function TableNode({ data }: any) {
                       position={Position.Right}
                       id={col.name}
                       style={{ right: -22 }}
-                      className="w-1.5 h-1.5 !bg-blue-500 !border-white !border"
+                      className="w-1.5 h-1.5 !bg-accent !border-white !border"
                     />
                   )}
                 </div>

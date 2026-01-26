@@ -61,8 +61,6 @@ export default function EditJiraModal({
         setValue("server_url", connectionData.server_url || connectionData.url || "");
         setValue("username", connectionData.username || "");
         setValue("api_token", "");
-        setValue("project_key", connectionData.project_key || "");
-        setValue("issue_type", connectionData.issue_type || "Bug");
       } else {
         reset();
         setValue("connection_name", "Jira Connection");
@@ -142,25 +140,6 @@ export default function EditJiraModal({
                   {...register("api_token")}
                 />
                 {errors.api_token && <p className="text-red-500 text-sm">{errors.api_token.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Project Key</Label>
-                <Input
-                  placeholder="PROJ"
-                  {...register("project_key")}
-                />
-                {errors.project_key && <p className="text-red-500 text-sm">{errors.project_key.message}</p>}
-              </div>
-              <div>
-                <Label>Issue Type</Label>
-                <Input
-                  placeholder="Bug"
-                  {...register("issue_type")}
-                />
-                {errors.issue_type && <p className="text-red-500 text-sm">{errors.issue_type.message}</p>}
               </div>
             </div>
           </div>

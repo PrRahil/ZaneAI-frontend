@@ -15,14 +15,12 @@ import {
     BarChart3,
     MessageSquare,
     Settings,
-    GitBranch,
     LogOut,
     User,
     Users,
     LayoutDashboard,
     ChevronRight,
-    PanelLeftClose,
-    PanelLeft,
+    Bot,
 } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { useLogout } from "@/hooks/useAuth";
@@ -97,17 +95,17 @@ export function AppSidebar() {
             {/* Header with Logo */}
             <div className="h-16 px-4 border-b border-sidebar-border flex items-center justify-center">
                 {!collapsed ? (
-                    <Link href="/overview" className="flex items-center space-x-2">
-                        <div className="h-8 w-8 bg-sidebar-primary rounded-lg flex items-center justify-center">
-                            <GitBranch className="h-5 w-5 text-sidebar-primary-foreground" />
+                    <Link href="/overview" className="flex items-center space-x-2 group">
+                        <div className="h-8 w-8 bg-accent rounded-2xl flex items-center justify-center transition-colors shadow-sm group-hover:bg-accent/90">
+                            <Bot className="h-5 w-5 text-accent-foreground" />
                         </div>
-                        <span className="font-semibold text-lg text-sidebar-foreground">
+                        <span className="font-semibold text-lg text-sidebar-foreground group-hover:text-accent transition-colors">
                             Myzane AI
                         </span>
                     </Link>
                 ) : (
-                    <div className="h-8 w-8 bg-sidebar-primary rounded-lg flex items-center justify-center">
-                        <GitBranch className="h-5 w-5 text-sidebar-primary-foreground" />
+                    <div className="h-8 w-8 bg-accent rounded-2xl flex items-center justify-center shadow-sm">
+                        <Bot className="h-5 w-5 text-accent-foreground" />
                     </div>
                 )}
             </div>
@@ -132,14 +130,15 @@ export function AppSidebar() {
                                         <Button
                                             variant="ghost"
                                             className={cn(
-                                                "w-full h-10",
+                                                "w-full h-10 relative overflow-hidden group",
                                                 collapsed ? "justify-center px-0" : "justify-start gap-3 px-3",
-                                                isActive &&
-                                                "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                                isActive
+                                                    ? "bg-accent/10 text-accent font-medium before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-accent"
+                                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                                             )}
                                             title={collapsed ? item.label : undefined}
                                         >
-                                            <Icon className="h-5 w-5 flex-shrink-0" />
+                                            <Icon className={cn("h-5 w-5 flex-shrink-0 transition-colors", isActive ? "text-accent group-hover:text-accent-foreground" : "text-muted-foreground group-hover:text-accent-foreground")} />
                                             {!collapsed && <span>{item.label}</span>}
                                         </Button>
                                     </Link>
@@ -157,26 +156,27 @@ export function AppSidebar() {
                         <Button
                             variant="ghost"
                             className={cn(
-                                "w-full h-12",
-                                collapsed ? "justify-center px-0" : "justify-start gap-3 px-3"
+                                "w-full h-12 group",
+                                collapsed ? "justify-center px-0" : "justify-start gap-3 px-3",
+                                "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                             )}
                         >
                             <Avatar className="h-8 w-8 flex-shrink-0">
-                                <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm">
+                                <AvatarFallback className="bg-accent/10 text-accent text-sm font-medium group-hover:bg-white group-hover:text-accent transition-colors">
                                     {user?.username ? user.username.slice(0, 2).toUpperCase() : "AA"}
                                 </AvatarFallback>
                             </Avatar>
                             {!collapsed && (
                                 <>
                                     <div className="flex-1 text-left overflow-hidden">
-                                        <p className="text-sm font-medium text-sidebar-foreground truncate">
+                                        <p className="text-sm font-medium text-sidebar-foreground group-hover:text-accent-foreground transition-colors">
                                             {user?.username || "Admin"}
                                         </p>
-                                        <p className="text-xs text-muted-foreground truncate">
+                                        <p className="text-xs text-muted-foreground truncate group-hover:text-accent-foreground/80">
                                             {user?.email || "admin@example.com"}
                                         </p>
                                     </div>
-                                    <ChevronRight className="h-4 w-4 flex-shrink-0" />
+                                    <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground group-hover:text-accent-foreground transition-colors" />
                                 </>
                             )}
                         </Button>

@@ -234,7 +234,7 @@ export function ChatInterface({ data }: ChatInterfaceProps) {
                         : "text-muted-foreground"
                         }`}
                     >
-                      {message.timestamp.toLocaleTimeString()}
+                      {message.timestamp.toLocaleDateString()} {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
 

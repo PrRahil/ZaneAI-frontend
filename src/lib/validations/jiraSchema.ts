@@ -21,21 +21,8 @@ export const jiraConnectionSchema = z.object({
     .string()
     .trim()
     .min(10, "API Token looks too short")
-    .max(200, "API Token is invalid")
-    .regex(/^[A-Za-z0-9_-]+$/, "Invalid API token format"),
+    .max(512, "API Token is invalid"),
 
-  project_key: z
-    .string()
-    .trim()
-    .min(2, "Project Key is required")
-    .max(10, "Project Key cannot exceed 10 characters")
-    .regex(/^[A-Z][A-Z0-9]+$/, "Project Key must be uppercase (e.g. ABC, PROJ1)"),
-
-  issue_type: z
-    .string()
-    .trim()
-    .min(1, "Issue Type is required")
-    .max(50, "Issue Type is too long"),
 });
 
 export type JiraConnectionSchemaType = z.infer<typeof jiraConnectionSchema>;
