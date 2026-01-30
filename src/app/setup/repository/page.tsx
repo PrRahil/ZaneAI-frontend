@@ -38,7 +38,7 @@ export default function RepositorySetup() {
   const installationId = installationList?.[0]?.id || null;
 
   const { data: repositories, isLoading } = useGithubRepositories(
-    installationId || undefined
+    installationId || undefined,
   );
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function RepositorySetup() {
 
       window.open(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}github/install?org_id=${ORG_ID}`,
-        "_blank"
+        "_blank",
       );
 
       toast("Complete installation in GitHub, then return here");
@@ -88,7 +88,7 @@ export default function RepositorySetup() {
           router.push("/setup/jira");
         },
         onError: () => toast.error("Sync failed!"),
-      }
+      },
     );
   };
 
@@ -126,7 +126,7 @@ export default function RepositorySetup() {
             <CardHeader>
               <CardTitle>Install GitHub App</CardTitle>
               <CardDescription>
-                Install Myzane AI GitHub App to continue
+                Install Zane.AI GitHub App to continue
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -151,7 +151,7 @@ export default function RepositorySetup() {
             <CardHeader>
               <CardTitle>Select Repositories</CardTitle>
               <CardDescription>
-                Choose repositories Myzane AI should analyze
+                Choose repositories Zane.AI should analyze
               </CardDescription>
             </CardHeader>
 
@@ -168,7 +168,7 @@ export default function RepositorySetup() {
                       setSelectedRepos((prev) =>
                         prev.includes(repo.repo_name)
                           ? prev.filter((x) => x !== repo.repo_name)
-                          : [...prev, repo.repo_name]
+                          : [...prev, repo.repo_name],
                       )
                     }
                   />

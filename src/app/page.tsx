@@ -22,7 +22,7 @@ export default function Page() {
         transition={{ duration: 0.3 }}
       >
         <h1 className="text-3xl font-semibold tracking-tight">
-          Myzane AI Studio
+          Zane.AI Studio
         </h1>
         <p className="text-sm text-black/60 dark:text-white/60 mt-2">
           Intelligent data lineage platform with AI-powered insights and query

@@ -11,7 +11,7 @@ export const LayoutSplashScreen = () => {
         </div>
 
         <span className="font-bold text-2xl text-foreground tracking-wide">
-          Myzane AI
+          Zane.AI
         </span>
       </div>
     </div>

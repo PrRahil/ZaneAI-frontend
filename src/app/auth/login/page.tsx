@@ -68,9 +68,9 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-8">
-            <h1 className="text-3xl font-semibold mb-2">Welcome to Myzane AI!</h1>
+            <h1 className="text-3xl font-semibold mb-2">Welcome to Zane.AI!</h1>
             <p className="text-muted-foreground">
-              Sign in to your Myzane AI account
+              Sign in to your Zane.AI account
             </p>
           </div>
 

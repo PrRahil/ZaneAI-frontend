@@ -16,13 +16,8 @@ import { useChat } from "@/hooks/useChat";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ChatPage() {
-  const {
-    threadId,
-    setThreadId,
-    messages,
-    setMessages,
-    isLoadingHistory,
-  } = useChat(undefined);
+  const { threadId, setThreadId, messages, setMessages, isLoadingHistory } =
+    useChat(undefined);
 
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -31,7 +26,9 @@ export default function ChatPage() {
     messageId: string;
   } | null>(null);
   const fallbackTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
+    null,
+  );
   const userId = useAuthStore((state) => state.user?.id);
   const { user } = useAuthStore();
 
@@ -64,7 +61,10 @@ export default function ChatPage() {
     onMessage: (message) => {
       switch (message.type) {
         case "system_message":
-          if (message.data?.status === "thread_created" && message.data.thread_id) {
+          if (
+            message.data?.status === "thread_created" &&
+            message.data.thread_id
+          ) {
             setThreadId(message.data.thread_id);
           }
           if (message.data?.status === "connected") {
@@ -98,7 +98,10 @@ export default function ChatPage() {
                 id: newMessageId,
                 content: message.data.content,
                 timestamp: new Date(),
-                sender: message.data?.message_type === "assistant" ? "assistant" : "user",
+                sender:
+                  message.data?.message_type === "assistant"
+                    ? "assistant"
+                    : "user",
               },
             ]);
             if (message.data?.message_type === "assistant") {
@@ -137,12 +140,22 @@ export default function ChatPage() {
   });
 
   useEffect(() => {
-    if (user?.id && user?.org_id && !isConnected && !connectionState.isConnecting) {
+    if (
+      user?.id &&
+      user?.org_id &&
+      !isConnected &&
+      !connectionState.isConnecting
+    ) {
       console.log("[ChatPage] User ready, triggering connection...");
       connect();
     }
-  }, [user?.id, user?.org_id, isConnected, connectionState.isConnecting, connect]);
-
+  }, [
+    user?.id,
+    user?.org_id,
+    isConnected,
+    connectionState.isConnecting,
+    connect,
+  ]);
 
   useEffect(() => {
     if (currentThreadId && currentThreadId !== threadId) {
@@ -200,7 +213,9 @@ export default function ChatPage() {
       return;
     }
 
-    console.log("WebSocket not connected; queueing message and calling connect()");
+    console.log(
+      "WebSocket not connected; queueing message and calling connect()",
+    );
     setPendingMessage({ content, messageId });
     connect();
     if (fallbackTimeoutRef.current) {
@@ -232,8 +247,7 @@ export default function ChatPage() {
     if (!sent) {
       const errorMessage: ChatMessageType = {
         id: (Date.now() + 1).toString(),
-        content:
-          "Failed to send message after connecting. Please try again.",
+        content: "Failed to send message after connecting. Please try again.",
         timestamp: new Date(),
         sender: "assistant",
       };
@@ -288,9 +302,7 @@ export default function ChatPage() {
                 </svg>
               </Button>
             </Link>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Myzane AI Chat
-            </h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Ask Zane</h1>
           </div>
           <p className="text-sm text-black/60 dark:text-white/60">
             Ask questions about your data and get intelligent insights
@@ -300,7 +312,9 @@ export default function ChatPage() {
           <div className="flex items-center gap-2">
             <ConnectionStatus connectionState={connectionState} />
             {isLoadingHistory && (
-              <span className="text-xs text-muted-foreground animate-pulse ml-2">Loading history...</span>
+              <span className="text-xs text-muted-foreground animate-pulse ml-2">
+                Loading history...
+              </span>
             )}
           </div>
           {isConnected ? (
@@ -333,7 +347,9 @@ export default function ChatPage() {
         {isLoadingHistory && messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full space-y-4">
             <div className="w-8 h-8 border-4 border-t-primary border-[hsl(var(--muted))] rounded-full animate-spin" />
-            <p className="text-sm text-muted-foreground">Restoring your conversation...</p>
+            <p className="text-sm text-muted-foreground">
+              Restoring your conversation...
+            </p>
           </div>
         ) : messages.length === 0 ? (
           <motion.div
@@ -359,8 +375,8 @@ export default function ChatPage() {
               </div>
               <h3 className="text-lg font-medium">Start a conversation</h3>
               <p className="text-sm text-black/60 dark:text-white/60">
-                Ask me anything about your data, lineage, or queries. I&apos;m here
-                to help!
+                Ask me anything about your data, lineage, or queries. I&apos;m
+                here to help!
               </p>
             </div>
           </motion.div>
@@ -399,7 +415,7 @@ export default function ChatPage() {
                       />
                     </div>
                     <span className="text-sm text-[hsl(var(--fg))]/60">
-                      Myzane AI thinking...
+                      Zane.AI thinking...
                     </span>
                   </div>
                 </div>

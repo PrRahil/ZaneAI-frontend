@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Simple WebSocket server for testing the Myzane AI chat functionality
+ * Simple WebSocket server for testing the Zane.AI chat functionality
  * 
  * To run this server:
  * 1. Make sure you have Node.js installed
