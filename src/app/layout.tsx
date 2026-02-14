@@ -18,6 +18,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Lineage Studio",
   description: "Minimal data lineage frontend",
+  icons: {
+    icon: "/zane-favicon.svg",
+    shortcut: "/zane-favicon.svg",
+    apple: "/zane-favicon.svg",
+  },
 };
 
 export default function RootLayout({

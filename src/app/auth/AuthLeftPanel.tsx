@@ -109,7 +109,11 @@ export default function AuthLeftPanel() {
       <div className="max-w-md w-full z-10">
         <div className="flex items-center mb-12">
           <div className="h-12 w-12 bg-primary-foreground rounded-xl flex items-center justify-center mr-4">
-            <Shield className="h-6 w-6 text-primary" />
+            <img
+              src="/zane-logo.png"
+              alt="Zane AI Logo"
+              className="h-8 w-8 object-contain"
+            />
           </div>
           <h2 className="text-2xl font-bold">
             <span className="text-primary-foreground/80">Zane</span>.AI
@@ -155,11 +159,10 @@ export default function AuthLeftPanel() {
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                currentSlide === idx
+              className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx
                   ? "w-6 bg-primary-foreground"
                   : "w-1.5 bg-primary-foreground/30 hover:bg-primary-foreground/50"
-              }`}
+                }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}

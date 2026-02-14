@@ -94,16 +94,24 @@ export function AppSidebar() {
       <div className="h-16 px-4 border-b border-sidebar-border flex items-center justify-center">
         {!collapsed ? (
           <Link href="/overview" className="flex items-center space-x-2 group">
-            <div className="h-8 w-8 bg-accent rounded-2xl flex items-center justify-center transition-colors shadow-sm group-hover:bg-accent/90">
-              <Bot className="h-5 w-5 text-accent-foreground" />
+            <div className="h-8 w-8 relative flex items-center justify-center transition-colors">
+              <img
+                src="/zane-logo.png"
+                alt="Zane AI Logo"
+                className="h-8 w-8 object-contain"
+              />
             </div>
             <span className="font-semibold text-lg text-sidebar-foreground group-hover:text-accent transition-colors">
               Zane.AI
             </span>
           </Link>
         ) : (
-          <div className="h-8 w-8 bg-accent rounded-2xl flex items-center justify-center shadow-sm">
-            <Bot className="h-5 w-5 text-accent-foreground" />
+          <div className="h-8 w-8 relative flex items-center justify-center">
+            <img
+              src="/zane-logo.png"
+              alt="Zane AI Logo"
+              className="h-8 w-8 object-contain"
+            />
           </div>
         )}
       </div>
