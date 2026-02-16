@@ -126,7 +126,7 @@ export default function RepositorySetup() {
             <CardHeader>
               <CardTitle>Install GitHub App</CardTitle>
               <CardDescription>
-                Install Zane.AI GitHub App to continue
+                Install Zane GitHub App to continue
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -151,7 +151,7 @@ export default function RepositorySetup() {
             <CardHeader>
               <CardTitle>Select Repositories</CardTitle>
               <CardDescription>
-                Choose repositories Zane.AI should analyze
+                Choose repositories Zane should analyze
               </CardDescription>
             </CardHeader>
 

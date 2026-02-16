@@ -97,19 +97,19 @@ export function AppSidebar() {
             <div className="h-8 w-8 relative flex items-center justify-center transition-colors">
               <img
                 src="/zane-logo.png"
-                alt="Zane AI Logo"
+                alt="Zane Logo"
                 className="h-8 w-8 object-contain"
               />
             </div>
             <span className="font-semibold text-lg text-sidebar-foreground group-hover:text-accent transition-colors">
-              Zane.AI
+              Zane
             </span>
           </Link>
         ) : (
           <div className="h-8 w-8 relative flex items-center justify-center">
             <img
               src="/zane-logo.png"
-              alt="Zane AI Logo"
+              alt="Zane Logo"
               className="h-8 w-8 object-contain"
             />
           </div>

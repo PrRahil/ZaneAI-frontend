@@ -1,6 +1,6 @@
 # WebSocket Chat Integration
 
-This document explains how to use the WebSocket functionality in the Zane.AI chat page.
+This document explains how to use the WebSocket functionality in the Zane chat page.
 
 ## Features
 
@@ -118,7 +118,7 @@ npm run dev
 
 ## Integration with Your Backend
 
-To integrate with your actual Zane.AI backend:
+To integrate with your actual Zane backend:
 
 1. **Update the WebSocket URL** in `.env.local` to point to your backend
 2. **Implement the message protocol** on your backend server

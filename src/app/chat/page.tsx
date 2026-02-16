@@ -415,7 +415,7 @@ export default function ChatPage() {
                       />
                     </div>
                     <span className="text-sm text-[hsl(var(--fg))]/60">
-                      Zane.AI thinking...
+                      Zane thinking...
                     </span>
                   </div>
                 </div>
