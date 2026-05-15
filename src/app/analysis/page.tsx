@@ -13,6 +13,7 @@ import {
   BarChart3,
   GitMerge,
   MessageCircle,
+  Ticket,
 } from "lucide-react";
 
 import { ImpactSummary } from "@/components/analysis/ImpactSummary";
@@ -22,6 +23,7 @@ import { ChatInterface } from "@/components/analysis/chat-interface";
 import { LayoutSplashScreen } from "@/components/ui/splash-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { transformLineageData } from "@/lib/lineageUtils";
+import CreateJiraTicketModal from "@/components/jira/CreateJiraTicketModal";
 
 function AnalysisContent() {
   const searchParams = useSearchParams();
@@ -29,6 +31,7 @@ function AnalysisContent() {
   const [selectedEdge, setSelectedEdge] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [modalOpen, setModalOpen] = useState(false);
+  const [jiraModalOpen, setJiraModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useGithubAnalysis(id as string);
 
@@ -85,14 +88,24 @@ function AnalysisContent() {
               </p>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open(analysis.pr_url, "_blank")}
-            >
-              <ExternalLink className="h-3.5 w-3.5 mr-2" />
-              View on GitHub
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setJiraModalOpen(true)}
+              >
+                <Ticket className="h-3.5 w-3.5 mr-2" />
+                Create Jira Ticket
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open(analysis.pr_url, "_blank")}
+              >
+                <ExternalLink className="h-3.5 w-3.5 mr-2" />
+                View on GitHub
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -148,6 +161,19 @@ function AnalysisContent() {
         onClose={() => setModalOpen(false)}
         edge={selectedEdge}
         data={impactData}
+      />
+
+      <CreateJiraTicketModal
+        open={jiraModalOpen}
+        onClose={() => setJiraModalOpen(false)}
+        defaultValues={{
+          summary: `Impact: ${analysis.pr_title}`,
+          description: [analysis.pr_description, impactData?.impact_analysis]
+            .filter(Boolean)
+            .join("\n\n"),
+          pr_url: analysis.pr_url,
+          analysis_report_url: window.location.href,
+        }}
       />
     </div>
   );
