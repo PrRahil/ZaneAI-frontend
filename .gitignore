@@ -31,3 +31,4 @@ yarn-error.log*
 *.rar
 *.7z
 .next/cache/
+*.tsbuildinfo

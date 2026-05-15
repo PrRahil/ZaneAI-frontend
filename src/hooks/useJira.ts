@@ -52,3 +52,78 @@ export const useGetJiraConnections = () =>
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+
+export type JiraProject = { key: string; name: string; id: string };
+export type JiraIssueType = { id: string; name: string; description: string };
+export type JiraAssignableUser = {
+  account_id: string;
+  name: string;
+  email: string;
+  active: boolean;
+};
+
+export type CreateJiraTicketPayload = {
+  connection_id: string;
+  project_key: string;
+  summary: string;
+  description: string;
+  issue_type?: string;
+  priority?: string;
+  assignee?: string;
+};
+
+export const useGetJiraProjects = (connectionId: string | null) =>
+  useQuery<JiraProject[]>({
+    queryKey: ["jira-projects", connectionId],
+    queryFn: async () => {
+      const res = await apiClient.get(`/jira/projects/${connectionId}`);
+      return res.data;
+    },
+    enabled: !!connectionId,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+export const useGetJiraIssueTypes = (
+  connectionId: string | null,
+  projectKey: string | null
+) =>
+  useQuery<JiraIssueType[]>({
+    queryKey: ["jira-issue-types", connectionId, projectKey],
+    queryFn: async () => {
+      const res = await apiClient.get(
+        `/jira/issue-types/${connectionId}/${projectKey}`
+      );
+      return res.data;
+    },
+    enabled: !!connectionId && !!projectKey,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+export const useGetJiraUsers = (
+  connectionId: string | null,
+  projectKey: string | null
+) =>
+  useQuery<JiraAssignableUser[]>({
+    queryKey: ["jira-users", connectionId, projectKey],
+    queryFn: async () => {
+      const params = projectKey ? { project_key: projectKey } : {};
+      const res = await apiClient.get(`/jira/users/${connectionId}`, { params });
+      return res.data;
+    },
+    enabled: !!connectionId && !!projectKey,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+export const useCreateJiraTicket = () =>
+  useMutation<any, Error, CreateJiraTicketPayload>({
+    mutationFn: async (payload) => {
+      const res = await apiClient.post("/jira/create-ticket", payload);
+      return res.data;
+    },
+    onError: (error) => {
+      console.error("Create Jira ticket error:", parseErrorMessage(error));
+    },
+  });

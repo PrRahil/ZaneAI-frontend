@@ -1,12 +1,21 @@
 import { AnalysisFile, LineagePayload, ReactFlowEdge, Table, Column } from "@/types/lineage";
 
 export const transformLineageData = (fileData: AnalysisFile): LineagePayload => {
-    if (!fileData || !fileData.complete_lineage) {
+    if (!fileData?.complete_lineage) {
         return { Tables: [], Edges: [] };
     }
 
     const { complete_lineage } = fileData;
-    const { center_node, downstream, upstream } = complete_lineage;
+    const { center_node } = complete_lineage;
+    const downstream = complete_lineage.downstream ?? [];
+    const upstream = complete_lineage.upstream ?? [];
+
+    if (!center_node?.table || !center_node?.column) {
+        return { Tables: [], Edges: [] };
+    }
+
+    const centerTable = center_node.table.toLowerCase();
+    const centerColumn = center_node.column.toLowerCase();
 
     const edges: ReactFlowEdge[] = [];
     const tablesMap = new Map<string, Map<string, Column>>();
@@ -54,12 +63,12 @@ export const transformLineageData = (fileData: AnalysisFile): LineagePayload => 
         const toCol = edge.target_column.toUpperCase();
 
         const isSourceCenter =
-            edge.source_table?.toLowerCase() === center_node.table?.toLowerCase() &&
-            edge.source_column?.toLowerCase() === center_node.column?.toLowerCase();
+            edge.source_table?.toLowerCase() === centerTable &&
+            edge.source_column?.toLowerCase() === centerColumn;
 
         const isTargetCenter =
-            edge.target_table?.toLowerCase() === center_node.table?.toLowerCase() &&
-            edge.target_column?.toLowerCase() === center_node.column?.toLowerCase();
+            edge.target_table?.toLowerCase() === centerTable &&
+            edge.target_column?.toLowerCase() === centerColumn;
 
         const isDropped = isSourceCenter;
 
@@ -77,7 +86,7 @@ export const transformLineageData = (fileData: AnalysisFile): LineagePayload => 
         addColumn(edge.target_database, edge.target_schema, edge.target_table, edge.target_column, isTargetCenter, true);
     });
 
-    upstream?.forEach((edge) => {
+    upstream.forEach((edge) => {
         if (!edge.source_table || !edge.source_column || !edge.target_table || !edge.target_column) return;
         const fromTable = edge.source_table.toUpperCase();
         const fromCol = edge.source_column.toUpperCase();
@@ -85,8 +94,8 @@ export const transformLineageData = (fileData: AnalysisFile): LineagePayload => 
         const toCol = edge.target_column.toUpperCase();
 
         const isSourceCenter =
-            edge.source_table.toLowerCase() === center_node.table.toLowerCase() &&
-            edge.source_column.toLowerCase() === center_node.column.toLowerCase();
+            edge.source_table.toLowerCase() === centerTable &&
+            edge.source_column.toLowerCase() === centerColumn;
 
         edges.push({
             FromTable: fromTable,
@@ -100,7 +109,16 @@ export const transformLineageData = (fileData: AnalysisFile): LineagePayload => 
         addColumn(edge.target_database, edge.target_schema, edge.target_table, edge.target_column, false, false); // Upstream aren't "impacted" usually, just context
     });
 
-    addColumn(center_node.database, center_node.schema, center_node.table, center_node.column, true, false);
+    if (center_node.database && center_node.schema) {
+        addColumn(
+            center_node.database,
+            center_node.schema,
+            center_node.table,
+            center_node.column,
+            true,
+            false
+        );
+    }
 
     const tables: Table[] = Array.from(tablesMap.entries()).map(([name, colsMap]) => ({
         Type: "Table",
