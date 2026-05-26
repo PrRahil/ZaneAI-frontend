@@ -42,16 +42,11 @@ export const useDeleteJiraConnection = () => {
   });
 };
 
-export const useGetJiraConnections = () =>
-  useQuery({
-    queryKey: ["jira-connections"],
-    queryFn: async () => {
-      const res = await apiClient.get("/jira/connections");
-      return res.data;
-    },
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-  });
+export type JiraConnection = {
+  id: string;
+  connection_name: string;
+  jira_url?: string;
+};
 
 export type JiraProject = { key: string; name: string; id: string };
 export type JiraIssueType = { id: string; name: string; description: string };
@@ -62,6 +57,24 @@ export type JiraAssignableUser = {
   active: boolean;
 };
 
+function normalizeJiraList<T>(data: unknown): T[] {
+  if (Array.isArray(data)) return data;
+  if (data && typeof data === "object") {
+    const record = data as Record<string, unknown>;
+    for (const key of [
+      "projects",
+      "issue_types",
+      "users",
+      "connections",
+      "data",
+      "results",
+    ]) {
+      if (Array.isArray(record[key])) return record[key] as T[];
+    }
+  }
+  return [];
+}
+
 export type CreateJiraTicketPayload = {
   connection_id: string;
   project_key: string;
@@ -70,18 +83,34 @@ export type CreateJiraTicketPayload = {
   issue_type?: string;
   priority?: string;
   assignee?: string;
+  linked_issue_key?: string; // upstream ticket key — backend links at creation time
+  link_type?: string;        // defaults to "Relates" on the backend
 };
+
+export const useGetJiraConnections = (enabled = true) =>
+  useQuery<JiraConnection[]>({
+    queryKey: ["jira-connections"],
+    queryFn: async () => {
+      const res = await apiClient.get("/jira/connections");
+      return normalizeJiraList<JiraConnection>(res.data);
+    },
+    enabled,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
 export const useGetJiraProjects = (connectionId: string | null) =>
   useQuery<JiraProject[]>({
     queryKey: ["jira-projects", connectionId],
     queryFn: async () => {
       const res = await apiClient.get(`/jira/projects/${connectionId}`);
-      return res.data;
+      return normalizeJiraList<JiraProject>(res.data);
     },
     enabled: !!connectionId,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 
 export const useGetJiraIssueTypes = (
@@ -94,7 +123,7 @@ export const useGetJiraIssueTypes = (
       const res = await apiClient.get(
         `/jira/issue-types/${connectionId}/${projectKey}`
       );
-      return res.data;
+      return normalizeJiraList<JiraIssueType>(res.data);
     },
     enabled: !!connectionId && !!projectKey,
     staleTime: 1000 * 60 * 5,
@@ -110,7 +139,7 @@ export const useGetJiraUsers = (
     queryFn: async () => {
       const params = projectKey ? { project_key: projectKey } : {};
       const res = await apiClient.get(`/jira/users/${connectionId}`, { params });
-      return res.data;
+      return normalizeJiraList<JiraAssignableUser>(res.data);
     },
     enabled: !!connectionId && !!projectKey,
     staleTime: 1000 * 60 * 5,

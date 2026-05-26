@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import {
   GitBranch,
@@ -12,14 +13,76 @@ import {
   User,
   FolderGit2,
   GitPullRequest,
+  Ticket,
+  Loader2,
 } from "lucide-react";
 
-import { useGithubAnalyses } from "@/hooks/useGithub";
+import { useGithubAnalyses, useGithubAnalysis } from "@/hooks/useGithub";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/ui/error-state";
 import Navigation from "@/components/layout/Navigation";
+import { useJiraModal } from "@/contexts/JiraModalContext";
+
+// Fetches the full analysis for a single PR on demand, then opens the global modal
+function JiraTicketButton({ pr }: { pr: any }) {
+  const [fetchEnabled, setFetchEnabled] = useState(false);
+  const { openJiraModal } = useJiraModal();
+
+  const { data: analysis, isLoading } = useGithubAnalysis(
+    fetchEnabled ? pr.analysis_id : undefined
+  );
+
+  // Open the modal once the fetch resolves — must be in useEffect, not render
+  useEffect(() => {
+    if (!analysis || !fetchEnabled) return;
+    const impactData = analysis.analysis_data?.files?.[0];
+    openJiraModal({
+      summary: `Impact: ${analysis.pr_title ?? pr.title}`,
+      description: analysis.pr_description ?? pr.description ?? "",
+      impact_analysis: impactData?.impact_analysis ?? "",
+      pr_url: analysis.pr_url ?? pr.pr_url,
+      analysis_report_url: `${window.location.origin}/analysis?id=${pr.analysis_id}`,
+      affected_query_ids: impactData?.affected_query_ids ?? [],
+    });
+    setFetchEnabled(false);
+  }, [analysis, fetchEnabled, openJiraModal, pr]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (analysis) {
+      const impactData = analysis.analysis_data?.files?.[0];
+      openJiraModal({
+        summary: `Impact: ${analysis.pr_title ?? pr.title}`,
+        description: analysis.pr_description ?? pr.description ?? "",
+        impact_analysis: impactData?.impact_analysis ?? "",
+        pr_url: analysis.pr_url ?? pr.pr_url,
+        analysis_report_url: `${window.location.origin}/analysis?id=${pr.analysis_id}`,
+        affected_query_ids: impactData?.affected_query_ids ?? [],
+      });
+    } else {
+      setFetchEnabled(true);
+    }
+  };
+
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-7 text-xs shrink-0"
+      onClick={handleClick}
+      disabled={isLoading && fetchEnabled}
+    >
+      {isLoading && fetchEnabled ? (
+        <Loader2 className="h-3 w-3 mr-1.5 animate-spin" />
+      ) : (
+        <Ticket className="h-3 w-3 mr-1.5" />
+      )}
+      Create Jira Ticket
+    </Button>
+  );
+}
 
 export default function OverviewPage() {
   const router = useRouter();
@@ -122,7 +185,6 @@ export default function OverviewPage() {
                   <CardContent className="p-6 space-y-4">
                     <Skeleton className="h-5 w-56" />
                     <Skeleton className="h-4 w-full" />
-
                     <div className="flex gap-6 flex-wrap">
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-4 w-28" />
@@ -154,10 +216,13 @@ export default function OverviewPage() {
                       </p>
                     </div>
 
-                    <Badge variant="outline" className="flex-shrink-0">
-                      <GitPullRequest className="h-3 w-3 mr-1" />
-                      {pr.total_impacted_queries} impacted
-                    </Badge>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <JiraTicketButton pr={pr} />
+                      <Badge variant="outline" className="shrink-0">
+                        <GitPullRequest className="h-3 w-3 mr-1" />
+                        {pr.total_impacted_queries} impacted
+                      </Badge>
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">

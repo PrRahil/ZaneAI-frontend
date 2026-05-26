@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AnimatePresence } from "framer-motion";
+import { JiraModalProvider } from "@/contexts/JiraModalContext";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -41,7 +42,11 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AnimatePresence mode="wait">{children}</AnimatePresence>
+      <AnimatePresence mode="wait">
+        <JiraModalProvider>
+          {children}
+        </JiraModalProvider>
+      </AnimatePresence>
 
       {/* Show React Query Devtools only in development */}
       {process.env.NODE_ENV !== "production" && (
