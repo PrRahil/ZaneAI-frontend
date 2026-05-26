@@ -74,28 +74,34 @@ function buildReferencesAppendixJira(
   analysisUrl?: string | null
 ): string {
   const items: string[] = [];
-  const pr = prUrl?.trim();
-  const analysis = analysisUrl?.trim();
 
-  if (pr) {
-    items.push(`* *Pull request:* [View pull request|${pr}]`);
+  if (prUrl?.trim()) {
+    items.push(`* *Pull request:* [View pull request|${prUrl.trim()}]`);
   }
-  if (analysis) {
-    items.push(`* *Analysis report:* [View analysis report|${analysis}]`);
+  if (analysisUrl?.trim()) {
+    items.push(`* *Analysis report:* [View analysis report|${analysisUrl.trim()}]`);
   }
   if (items.length === 0) return "";
 
   return ["----", "", "h3. References", "", ...items].join("\n");
 }
 
+function buildAffectedQueriesSection(queryIds?: string[] | null): string {
+  if (!queryIds || queryIds.length === 0) return "";
+
+  const items = queryIds.map((id) => `* {{${id}}}`).join("\n");
+  return ["----", "", "h3. Affected Query IDs", "", items].join("\n");
+}
+
 export function buildJiraTicketDescription(
   body: string,
   prUrl?: string | null,
-  analysisUrl?: string | null
+  analysisUrl?: string | null,
+  affectedQueryIds?: string[] | null
 ): string {
   const wikiBody = markdownToJiraWiki(body.trim());
-  const appendix = buildReferencesAppendixJira(prUrl, analysisUrl);
+  const references = buildReferencesAppendixJira(prUrl, analysisUrl);
+  const queries = buildAffectedQueriesSection(affectedQueryIds);
 
-  if (!appendix) return wikiBody;
-  return [wikiBody, appendix].filter(Boolean).join("\n\n");
+  return [wikiBody, references, queries].filter(Boolean).join("\n\n");
 }

@@ -18,21 +18,18 @@ import {
 
 import { ImpactSummary } from "@/components/analysis/ImpactSummary";
 import { ReactFlowLineage } from "@/components/analysis/ReactFlowLineage";
-import { QueryDetailModal } from "@/components/analysis/QueryDetailModal";
 import { ChatInterface } from "@/components/analysis/chat-interface";
 import { LayoutSplashScreen } from "@/components/ui/splash-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { transformLineageData } from "@/lib/lineageUtils";
-import CreateJiraTicketModal from "@/components/jira/CreateJiraTicketModal";
+import { useJiraModal } from "@/contexts/JiraModalContext";
 
 function AnalysisContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const [selectedEdge, setSelectedEdge] = useState<any | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [jiraModalOpen, setJiraModalOpen] = useState(false);
 
+  const { openJiraModal } = useJiraModal();
   const { data, isLoading, isError } = useGithubAnalysis(id as string);
 
   if (!id) {
@@ -61,6 +58,17 @@ function AnalysisContent() {
 
   const analysis = data;
   const impactData = analysis?.analysis_data?.files?.[0];
+
+  const handleOpenJira = () => {
+    openJiraModal({
+      summary: `Impact: ${analysis.pr_title}`,
+      description: analysis.pr_description ?? "",
+      impact_analysis: impactData?.impact_analysis ?? "",
+      pr_url: analysis.pr_url,
+      analysis_report_url: window.location.href,
+      affected_query_ids: impactData?.affected_query_ids ?? [],
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,7 +100,7 @@ function AnalysisContent() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setJiraModalOpen(true)}
+                onClick={handleOpenJira}
               >
                 <Ticket className="h-3.5 w-3.5 mr-2" />
                 Create Jira Ticket
@@ -155,26 +163,6 @@ function AnalysisContent() {
           </TabsContent>
         </Tabs>
       </div>
-
-      <QueryDetailModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        edge={selectedEdge}
-        data={impactData}
-      />
-
-      <CreateJiraTicketModal
-        open={jiraModalOpen}
-        onClose={() => setJiraModalOpen(false)}
-        defaultValues={{
-          summary: `Impact: ${analysis.pr_title}`,
-          description: [analysis.pr_description, impactData?.impact_analysis]
-            .filter(Boolean)
-            .join("\n\n"),
-          pr_url: analysis.pr_url,
-          analysis_report_url: window.location.href,
-        }}
-      />
     </div>
   );
 }
