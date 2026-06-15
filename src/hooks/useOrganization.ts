@@ -43,7 +43,7 @@ export const useCreateOrganization = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: CreateOrganizationPayload) => {
-      const res = await apiClient.post("/organizations", payload);
+      const res = await apiClient.post("/organizations/", payload);
       return res.data;
     },
     onSuccess: () => {
