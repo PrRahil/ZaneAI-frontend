@@ -38,7 +38,7 @@ export const useCreateUser = () => {
 
       if (!ORG_ID) throw new Error("Organization ID is missing.");
 
-      const res = await apiClient.post(`/users?org_id=${ORG_ID}`, data);
+      const res = await apiClient.post(`/users/?org_id=${ORG_ID}`, data);
       return res.data;
     },
     onSuccess: () => {
