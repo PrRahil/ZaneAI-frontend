@@ -60,69 +60,75 @@ export default function ChatPage() {
     },
     onMessage: (message) => {
       switch (message.type) {
-        case "system_message":
+        case "system_message": {
+          const sysData = message.data as any;
           if (
-            message.data?.status === "thread_created" &&
-            message.data.thread_id
+            sysData?.status === "thread_created" &&
+            sysData.thread_id
           ) {
-            setThreadId(message.data.thread_id);
+            setThreadId(sysData.thread_id);
           }
-          if (message.data?.status === "connected") {
+          if (sysData?.status === "connected") {
             break; // Skip noisy welcome message
           }
-          if (message.data?.message) {
+          if (sysData?.message) {
             setMessages((prev) => [
               ...prev,
               {
                 id: `system-${Date.now()}`,
-                content: message.data.message,
+                content: sysData.message,
                 timestamp: new Date(),
                 sender: "assistant",
               },
             ]);
           }
           break;
-        case "chat_message":
+        }
+        case "chat_message": {
+          const chatData = message.data as any;
           if (
-            message.data?.sender_id &&
+            chatData?.sender_id &&
             userId &&
-            message.data.sender_id === userId
+            chatData.sender_id === userId
           ) {
             return;
           }
-          if (message.data?.content) {
+          if (chatData?.content) {
             const newMessageId = `chat-${Date.now()}`;
             setMessages((prev) => [
               ...prev,
               {
                 id: newMessageId,
-                content: message.data.content,
+                content: chatData.content,
                 timestamp: new Date(),
                 sender:
-                  message.data?.message_type === "assistant"
+                  chatData?.message_type === "assistant"
                     ? "assistant"
                     : "user",
               },
             ]);
-            if (message.data?.message_type === "assistant") {
+            if (chatData?.message_type === "assistant") {
               setStreamingMessageId(newMessageId);
             }
           }
           break;
-        case "error":
+        }
+        case "error": {
+          const errData = message.data as any;
           setIsLoading(false);
-          if (message.data?.error_message) {
+          if (errData?.error_message) {
             setMessages((prev) => [
               ...prev,
               {
                 id: `error-${Date.now()}`,
-                content: message.data.error_message,
+                content: errData.error_message,
                 timestamp: new Date(),
                 sender: "assistant",
               },
             ]);
           }
           break;
+        }
       }
     },
     onError: (error) => {

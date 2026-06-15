@@ -68,39 +68,43 @@ export function ChatInterface({ data }: ChatInterfaceProps) {
     },
     onMessage: (message: WebSocketMessage) => {
       switch (message.type) {
-        case "system_message":
-          if (message.data?.status === "connected") {
+        case "system_message": {
+          const sysData = message.data as any;
+          if (sysData?.status === "connected") {
             break;
           }
-          if (message.data?.status === "thread_created" && message.data.thread_id) {
-            setThreadId(message.data.thread_id);
+          if (sysData?.status === "thread_created" && sysData.thread_id) {
+            setThreadId(sysData.thread_id);
           }
-          if (message.data?.message) {
+          if (sysData?.message) {
             setMessages((prev) => [
               ...prev,
               {
                 id: `system-${Date.now()}`,
                 sender: "assistant",
-                content: message.data.message,
+                content: sysData.message,
                 timestamp: new Date(),
               },
             ]);
           }
           break;
-        case "error":
+        }
+        case "error": {
+          const errData = message.data as any;
           setIsLoading(false);
-          if (message.data?.error_message) {
+          if (errData?.error_message) {
             setMessages((prev) => [
               ...prev,
               {
                 id: `error-${Date.now()}`,
                 sender: "assistant",
-                content: message.data.error_message,
+                content: errData.error_message,
                 timestamp: new Date(),
               },
             ]);
           }
           break;
+        }
       }
     },
     onError: () => {
